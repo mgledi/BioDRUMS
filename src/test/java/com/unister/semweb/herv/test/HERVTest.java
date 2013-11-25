@@ -60,7 +60,7 @@ public class HERVTest {
         double eValue = 1346.84838238;
 
         HERV prototype = new HERV();
-        ByteBuffer byteBufferObject = ByteBuffer.allocate(prototype.byteBufferSize);
+        ByteBuffer byteBufferObject = ByteBuffer.allocate(prototype.ELEMENT_SIZE);
         byteBufferObject.put(chromosome);
         byteBufferObject.putInt(startChromosome);
         byteBufferObject.putInt(endChromosome);
@@ -100,7 +100,7 @@ public class HERVTest {
         double eValue = 1346.84838238;
 
         HERV prototype = new HERV();
-        ByteBuffer byteBufferObject = ByteBuffer.allocate(prototype.byteBufferSize);
+        ByteBuffer byteBufferObject = ByteBuffer.allocate(prototype.ELEMENT_SIZE);
         byteBufferObject.put(chromosome);
         byteBufferObject.putInt(startChromosome);
         byteBufferObject.putInt(endChromosome);
@@ -139,7 +139,7 @@ public class HERVTest {
         double eValue = 1346.84838238;
 
         HERV prototype = new HERV();
-        ByteBuffer byteBufferObject = ByteBuffer.allocate(prototype.byteBufferSize);
+        ByteBuffer byteBufferObject = ByteBuffer.allocate(prototype.ELEMENT_SIZE);
         byteBufferObject.put(chromosome);
         byteBufferObject.putInt(startChromosome);
         byteBufferObject.putInt(endChromosome);

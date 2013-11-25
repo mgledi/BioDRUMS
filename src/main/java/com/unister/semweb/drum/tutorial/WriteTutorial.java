@@ -6,12 +6,12 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 
+import com.unister.semweb.drums.GlobalParameters;
+import com.unister.semweb.drums.api.DRUMS;
+import com.unister.semweb.drums.api.DRUMSException;
+import com.unister.semweb.drums.api.DRUMSInstantiator;
+import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
 import com.unister.semweb.herv.HERV;
-import com.unister.semweb.sdrum.GlobalParameters;
-import com.unister.semweb.sdrum.api.FileStorageException;
-import com.unister.semweb.sdrum.api.SDRUM;
-import com.unister.semweb.sdrum.api.SDRUM_API;
-import com.unister.semweb.sdrum.bucket.hashfunction.RangeHashFunction;
 
 /**
  * Example implementation for showing how to write to the drumSDB.
@@ -51,10 +51,10 @@ public class WriteTutorial {
         }
 
         // After that we need the drumSDB and open the database.
-        SDRUM<HERV> sdrum = null;
+        DRUMS<HERV> sdrum = null;
 
         try {
-            sdrum = SDRUM_API.createOrOpenTable(hashFunction, globalParameters);
+            sdrum = DRUMSInstantiator.createOrOpenTable(hashFunction, globalParameters);
         } catch (IOException ex) {
             throw new RuntimeException("Could not initialise the sdrum.", ex);
         }
@@ -67,7 +67,7 @@ public class WriteTutorial {
         try {
             sdrum.insertOrMerge(testdata);
             sdrum.close();
-        } catch (FileStorageException ex) {
+        } catch (DRUMSException ex) {
             throw new RuntimeException("Could not instert the data into sdrum.", ex);
         } catch (InterruptedException ex) {
             throw new RuntimeException("Sdrum was interrupted while adding elements.", ex);
@@ -80,9 +80,9 @@ public class WriteTutorial {
         HERV[] result = new HERV[numberToGenerate];
         for (int i = 0; i < result.length; i++) {
             result[i] = new HERV();
-            result[i].key = generateRandomByteArray(HERV.keySize);
-            result[i].value = generateRandomByteArray(HERV.byteBufferSize
-                    - HERV.keySize);
+            result[i].key = generateRandomByteArray(HERV.KEY_SIZE);
+            result[i].value = generateRandomByteArray(HERV.ELEMENT_SIZE
+                    - HERV.KEY_SIZE);
         }
         return result;
     }

@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.unister.semweb.drums.GlobalParameters;
+import com.unister.semweb.drums.api.DRUMS;
+import com.unister.semweb.drums.api.DRUMSException;
+import com.unister.semweb.drums.api.DRUMSInstantiator;
+import com.unister.semweb.drums.api.DRUMSReader;
+import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
+import com.unister.semweb.drums.file.FileLockException;
 import com.unister.semweb.herv.HERV;
-import com.unister.semweb.sdrum.GlobalParameters;
-import com.unister.semweb.sdrum.api.FileStorageException;
-import com.unister.semweb.sdrum.api.SDRUM;
-import com.unister.semweb.sdrum.api.SDRUM_API;
-import com.unister.semweb.sdrum.api.SDRUM_Reader;
-import com.unister.semweb.sdrum.bucket.hashfunction.RangeHashFunction;
-import com.unister.semweb.sdrum.file.FileLockException;
 
 /**
  * Example implementation that reads in previous written data from drumSDB.
@@ -29,10 +29,10 @@ public class ReadTutorial {
     private static final String hashFunctionFilename = "rangeHashFunction.txt";
 
     /** The drumSDB to use. */
-    private SDRUM<HERV> sdrum;
+    private DRUMS<HERV> sdrum;
 
     /** The reader instance to use. */
-    private SDRUM_Reader<HERV> reader;
+    private DRUMSReader<HERV> reader;
 
     public static void main(String[] args) {
         ReadTutorial tutorial = new ReadTutorial();
@@ -58,7 +58,7 @@ public class ReadTutorial {
 
         // We must open the drumSDB.
         try {
-            sdrum = SDRUM_API.createOrOpenTable(hashFunction, globalParameters);
+            sdrum = DRUMSInstantiator.createOrOpenTable(hashFunction, globalParameters);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -108,7 +108,7 @@ public class ReadTutorial {
             data = reader.get(key);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        } catch (FileStorageException ex) {
+        } catch (DRUMSException ex) {
             throw new RuntimeException(ex);
         }
 
@@ -132,7 +132,7 @@ public class ReadTutorial {
             data = reader.get(toRead.toArray(new byte[0][0]));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        } catch (FileStorageException ex) {
+        } catch (DRUMSException ex) {
             throw new RuntimeException(ex);
         }
         return data;

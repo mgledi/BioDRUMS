@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 
-import com.unister.semweb.sdrum.bucket.hashfunction.RangeHashFunction;
+import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
 
 public class RangeHashFunctionLoader {
     private static final String rangeHashFunctionFilename = "rangeHashFunction.txt";

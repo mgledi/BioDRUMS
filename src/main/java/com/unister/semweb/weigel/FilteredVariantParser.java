@@ -7,17 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.zip.GZIPInputStream;
-
-import org.apache.commons.io.FileUtils;
-
-import com.carrotsearch.hppc.IntArrayList;
-import com.unister.semweb.sdrum.api.FileStorageException;
-import com.unister.semweb.sdrum.api.SDRUM;
-import com.unister.semweb.sdrum.api.SDRUM_API;
-import com.unister.semweb.sdrum.bucket.hashfunction.RangeHashFunction;
-import com.unister.semweb.sdrum.file.HeaderIndexFile;
 
 public class FilteredVariantParser {
     String[] lines;

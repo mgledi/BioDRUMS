@@ -3,8 +3,8 @@ package com.unister.semweb.weigel;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import com.unister.semweb.sdrum.file.HeaderIndexFile;
-import com.unister.semweb.sdrum.storable.AbstractKVStorable;
+import com.unister.semweb.drums.file.HeaderIndexFile;
+import com.unister.semweb.drums.storable.AbstractKVStorable;
 
 /**
  * This class represents a replace. It can be stored in {@link HeaderIndexFile}s. An object of this class needs 26 bytes
@@ -131,11 +131,6 @@ public class ArabReplace extends AbstractKVStorable {
     public ArabReplace clone() {
         ByteBuffer bytebuffer = this.toByteBuffer();
         return fromByteBuffer(bytebuffer);
-    }
-
-    @Override
-    public int getByteBufferSize() {
-        return byteBufferSize;
     }
 
     @Override

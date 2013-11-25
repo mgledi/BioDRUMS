@@ -2,7 +2,7 @@ package com.unister.semweb.weigel;
 
 import java.nio.ByteBuffer;
 
-import com.unister.semweb.sdrum.utils.KeyUtils;
+import com.unister.semweb.drums.utils.KeyUtils;
 
 public class CreateHashFunction {
 
@@ -30,7 +30,7 @@ public class CreateHashFunction {
                 bucketId ++;
             }
             
-            sb.append(KeyUtils.generateHashFunction(lowerBound, upperBound, bucketIds, ".db", "replace"));
+            sb.append(KeyUtils.generateRangeHashFunction(lowerBound, upperBound, bucketIds, ".db", "replace"));
         }
         sb.insert(0, "b\tb\tb\tb\tb\tb\tb\tbucket\tsize\n");
         String out = sb.toString().replace("replace", "255\t255\treplace");
