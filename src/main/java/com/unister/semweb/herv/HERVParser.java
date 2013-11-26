@@ -1,51 +1,52 @@
 package com.unister.semweb.herv;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author Martin Nettling
+ */
 public class HERVParser {
     private static final Logger log = LoggerFactory.getLogger(HERVParser.class);
+
+    /** Counter for all lines */
     private long overallLines;
+
+    /** Counter for lines which are causing an error */
     private long errorLines;
 
     private BufferedReader bufferedReader;
-    String[] lines;
-    int actLine;
 
+    /**
+     * Instantiates a new parser for HERV-data.
+     * 
+     * @param filename
+     *            the name of the file, which contains the HERV-Data
+     * @param bufferSize
+     *            the size of the buffer to use
+     * @throws IOException
+     */
     public HERVParser(String filename, int bufferSize) throws IOException {
-        actLine = 0;
         FileReader fileReader = new FileReader(filename);
         bufferedReader = new BufferedReader(fileReader, bufferSize);
-        // if (f.getAbsolutePath().endsWith(".gz")) {
-        // readFileToLinesZipped(f);
-        // } else {
-        // readFileToLinesUnzipped(f);
-        // }
-
     }
 
-    public void readFileToLinesUnzipped(File f) throws IOException {
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
-        ArrayList<String> lines = new ArrayList<String>();
-        String line;
-        while ((line = br.readLine()) != null) {
-            lines.add(line);
-        }
-        br.close();
-        fr.close();
-        this.lines = lines.toArray(new String[lines.size()]);
-    }
-
+    /**
+     * This method to read the next correct line from the underlying file. It parses this line and instantiates a new
+     * {@link HERV} object.
+     * 
+     * @return the next {@link HERV}-object. NULL if no next object can be read.
+     * @throws IOException
+     */
     public HERV readNext() throws IOException {
         String nextLine = bufferedReader.readLine();
         HERV actualObject = null;
+        // read lines until a new HERV-object could be read or the end of the file is reached
         while (nextLine != null && actualObject == null) {
             actualObject = parseLine(nextLine);
             overallLines++;
@@ -55,10 +56,16 @@ public class HERVParser {
             errorLines++;
             nextLine = bufferedReader.readLine();
         }
-
         return actualObject;
     }
 
+    /**
+     * This method parses the given line and generates a new {@link HERV}-object.
+     * 
+     * @param line
+     *            the line to parse.
+     * @return the {@link HERV}-object presented by the given line.
+     */
     public HERV parseLine(String line) {
         try {
             HERV newData = new HERV();
@@ -89,9 +96,6 @@ public class HERVParser {
             String endChromosomeString = Aline[9];
             int endChromosome = Integer.valueOf(endChromosomeString);
 
-            // String strandOnChromosomeString = Aline[11];
-            // byte strandOnChromosome = Byte.valueOf(strandOnChromosomeString);
-
             String eValueString = Aline[10];
             double eValue = Double.valueOf(eValueString);
 
@@ -112,17 +116,15 @@ public class HERVParser {
     }
 
     private byte extractChromosom(String chromosomString) {
-        String value = chromosomString.substring(3);
-        value = value.trim();
-        value = value.toLowerCase();
+        String value = chromosomString.substring(3).trim().toLowerCase();
+        // handle x and y chromosome
         if (value.equals("x")) {
             return 23;
-        }
-
-        if (value.equals("y")) {
+        } else if (value.equals("y")) {
             return 24;
         }
 
+        // handle chromsome 1 to 22.
         try {
             byte result = Byte.valueOf(value);
             return result;
@@ -132,13 +134,13 @@ public class HERVParser {
         }
     }
 
+    /** @return the number of read lines */
     public long getOverallLines() {
         return overallLines;
     }
 
+    /** @return the number of read lines with an error */
     public long getErrorLines() {
         return errorLines;
     }
-
-    public static int TYPE = 1;
 }
