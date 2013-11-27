@@ -13,6 +13,13 @@ import com.unister.semweb.drums.utils.KeyUtils;
 /**
  * This class represents a position of a HERV in DNA. It can be stored in {@link HeaderIndexFile}s. <br>
  * <br>
+ * <code>
+ * --------------------- 24 bytes ----------------------------------------------------------------------------<br>
+ * .... key ......................................................................... | .... value ...........<br>
+ * chromosome | start pos chr | end pos chr | start pos herv | end pos herv | herv id | strand chr | evalue .|<br>
+ * 1 bytes ...| 4 bytes ......| 4 bytes ....| 2 bytes .......| 2 bytes .....| 2 bytes | 1 byte ....| 8 bytes |<br>
+ * -----------------------------------------------------------------------------------------------------------<br>
+ * </code><br>
  * Use the methods {@link #initFromByteBuffer(ByteBuffer)} and {@link #toByteBuffer()} to handle the byte-streams stored
  * in {@link HeaderIndexFile}.
  * 
