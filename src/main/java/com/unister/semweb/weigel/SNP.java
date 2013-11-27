@@ -13,10 +13,11 @@ import com.unister.semweb.herv.HERV;
  * in Byte-Representation. The first 7 byte of this representation represent the key. <br>
  * <br>
  * <code>
- * ------------ 9 bytes ---------<br>
- * key ... | from-base | to base <br>
- * 7 bytes | 1 bytes ..| 1 bytes <br>
- * ------------------------------<br>
+ * --------------------- 9 bytes --------------------<br>
+ * .... key ................... | .... value ........<br>
+ * seq id .| position | ecotype | from-base | to base<br>
+ * 1 bytes | 4 bytes .| 2 bytes | 1 bytes ..| 1 bytes<br>
+ * --------------------------------------------------<br>
  * </code><br>
  * <br>
  * Use the methods {@link #initFromByteBuffer(ByteBuffer)} and {@link #toByteBuffer()} to handle the byte-streams stored
