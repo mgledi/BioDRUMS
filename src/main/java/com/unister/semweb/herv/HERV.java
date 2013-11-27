@@ -278,20 +278,16 @@ public class HERV extends AbstractKVStorable {
             ByteBuffer.wrap(lowerBound).put((byte) (i + 1)).putInt(0); // put chromosome number
             ByteBuffer.wrap(upperBound).put((byte) (i + 1)).putInt(HUMAN_CHROMOSOME_LENGTHS[i]); // put length of
                                                                                                  // chromosome
-            int buckets = (int) (HUMAN_CHROMOSOME_LENGTHS[i] / basesPerBucket);
+            int buckets = (int) Math.ceil( (double)HUMAN_CHROMOSOME_LENGTHS[i] / basesPerBucket);
             byte[][] rangesTmp = KeyUtils.getMaxValsPerRange(lowerBound, upperBound, buckets);
 
             for (int j = 0; j < buckets; j++) {
-                if (bucketId < 10) {
-                    bucketNames.add("0" + bucketId);
-                } else {
-                    bucketNames.add("" + bucketId);
-                }
+                String bucketName = bucketId < 10 ? "data0" + bucketId + ".db" : "data" + bucketId + ".db";
                 rangesTmp[j][5] = rangesTmp[j][6] = (byte) 255;
-                maxKeyValues.add(rangesTmp[j]);
+                maxKeyValues.add(Arrays.copyOf(rangesTmp[j],7));
+                bucketNames.add(bucketName);
                 bucketId++;
             }
-
         }
         RangeHashFunction hashfunction = new RangeHashFunction(
                 maxKeyValues.toArray(new byte[0][]),

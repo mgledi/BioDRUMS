@@ -80,9 +80,8 @@ public class WriteTutorial {
         HERV[] result = new HERV[numberToGenerate];
         for (int i = 0; i < result.length; i++) {
             result[i] = new HERV();
-            result[i].key = generateRandomByteArray(HERV.KEY_SIZE);
-            result[i].value = generateRandomByteArray(HERV.ELEMENT_SIZE
-                    - HERV.KEY_SIZE);
+            result[i].setKey( generateRandomByteArray(HERV.KEY_SIZE) );
+            result[i].setValue( generateRandomByteArray(HERV.ELEMENT_SIZE - HERV.KEY_SIZE));
         }
         return result;
     }

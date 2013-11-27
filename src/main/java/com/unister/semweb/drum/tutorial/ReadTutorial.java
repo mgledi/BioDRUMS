@@ -80,7 +80,7 @@ public class ReadTutorial {
             HERV readElement = readOneEntry(oneKey);
             StringBuilder builder = new StringBuilder();
             builder.append("HERV Date: ");
-            builder.append("Key: ").append(Arrays.toString(readElement.key)).append("; ");
+            builder.append("Key: ").append(Arrays.toString(readElement.getKey())).append("; ");
             builder.append("Start at chromosome position: ").append(readElement.getStartPositionChromosome())
                     .append("; ");
             builder.append("End position at chromosome: ").append(readElement.getEndPositionChromosome()).append("; ");
@@ -145,7 +145,7 @@ public class ReadTutorial {
 
         List<byte[]> writtenKeys = new ArrayList<byte[]>();
         for (HERV oneDate : writtenData) {
-            writtenKeys.add(oneDate.key);
+            writtenKeys.add(oneDate.getKey());
         }
         return writtenKeys;
     }

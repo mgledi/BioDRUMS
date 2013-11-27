@@ -1,11 +1,14 @@
 package com.unister.semweb.weigel;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
 import com.unister.semweb.drums.file.HeaderIndexFile;
 import com.unister.semweb.drums.storable.AbstractKVStorable;
 import com.unister.semweb.drums.utils.Bytes;
+import com.unister.semweb.drums.utils.KeyUtils;
 import com.unister.semweb.herv.HERV;
 
 /**
@@ -27,6 +30,14 @@ import com.unister.semweb.herv.HERV;
  */
 public class SNP extends AbstractKVStorable {
     private static final long serialVersionUID = 3226841314268658893L;
+
+    /** The lengths of the chromosomes in Arabidopsis thaliana */
+    public static final int[] ARAB_CHROMOSOME_LENGTHS = { 
+        34964571, 
+        22037565, 
+        25499034, 
+        20862711, 
+        31270811 };
 
     /**
      * the size the object needs in byte, if we want to write it in a byte-array. If you make changes to the functions
@@ -208,5 +219,52 @@ public class SNP extends AbstractKVStorable {
         }
 
         return true;
+    }
+
+    /**
+     * This method determines a good {@link RangeHashFunction} for {@link #ARAB_CHROMOSOME_LENGTHS}.
+     * 
+     * @return a {@link RangeHashFunction} for {@link SNP}-data
+     */
+    public static RangeHashFunction createHashFunction() {
+
+        long fullLength = sum(ARAB_CHROMOSOME_LENGTHS);
+        int lowerBucketBound = 128;
+
+        int basesPerBucket = (int) (fullLength / lowerBucketBound + 1);
+        byte[] upperBound = new byte[7];
+        byte[] lowerBound = new byte[7];
+        int bucketId = 0;       
+        ArrayList<byte[]> maxKeyValues = new ArrayList<byte[]>();
+        ArrayList<String> bucketNames = new ArrayList<String>();
+
+        for (int i = 0; i < 5; i++) {
+            ByteBuffer.wrap(lowerBound).put((byte) (i + 1)).putInt(0);
+            ByteBuffer.wrap(upperBound).put((byte) (i + 1)).putInt(ARAB_CHROMOSOME_LENGTHS[i]);
+            int buckets = (int) Math.ceil( (double)ARAB_CHROMOSOME_LENGTHS[i] / basesPerBucket);
+            byte[][] rangesTmp = KeyUtils.getMaxValsPerRange(lowerBound, upperBound, buckets);            
+            
+            for (int j = 0; j < buckets; j++) {
+                String bucketName = bucketId < 10 ? "data0" + bucketId + ".db" : "data" + bucketId + ".db";
+                rangesTmp[j][5] = rangesTmp[j][6] = (byte) 255;
+                maxKeyValues.add(Arrays.copyOf(rangesTmp[j],7));
+                bucketNames.add(bucketName);
+                bucketId++;
+            }
+        }
+        RangeHashFunction hashfunction = new RangeHashFunction(
+                maxKeyValues.toArray(new byte[0][]),
+                bucketNames.toArray(new String[0]),
+                "SNP_RangeHashFunction.txt");
+        return hashfunction;
+    }
+    
+
+    private static long sum(int[] summands) {
+        long finalSum = 0;
+        for (long summand : summands) {
+            finalSum += summand;
+        }
+        return finalSum;
     }
 }

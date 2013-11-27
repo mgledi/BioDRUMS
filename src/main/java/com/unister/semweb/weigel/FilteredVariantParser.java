@@ -9,58 +9,86 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * 
+ * @author Martin Nettling
+ */
 public class FilteredVariantParser {
     String[] lines;
-    int actLine;
+    int curLine;
+    int ecotype_id;
 
-    public FilteredVariantParser(String filename) throws IOException {
+    /**
+     * 
+     * @param filename
+     * @param ecotype_id
+     * @throws IOException
+     */
+    public FilteredVariantParser(String filename, int ecotype_id) throws IOException {
         File f = new File(filename);
-        actLine = 0;
+        curLine = 0;
         if (f.getAbsolutePath().endsWith(".gz")) {
             readFileToLinesZipped(f);
         } else {
             readFileToLinesUnzipped(f);
         }
-
+        this.ecotype_id = ecotype_id;
     }
 
-    public void readFileToLinesZipped(File f) throws IOException {
+    private void readFileToLinesZipped(File f) throws IOException {
         FileInputStream fis = new FileInputStream(f);
         GZIPInputStream gis = new GZIPInputStream(fis);
-        BufferedReader in = new BufferedReader(new InputStreamReader(gis));
-        String line;
-        ArrayList<String> lines = new ArrayList<String>();
-        while ((line = in.readLine()) != null) {
-            lines.add(line);
-        }
-        this.lines = lines.toArray(new String[lines.size()]);
+        BufferedReader br = new BufferedReader(new InputStreamReader(gis));
+        this.readLines(br);
+        br.close();
+        gis.close();
+        fis.close();
     }
 
-    public void readFileToLinesUnzipped(File f) throws IOException {
+    private void readFileToLinesUnzipped(File f) throws IOException {
         FileReader fr = new FileReader(f);
         BufferedReader br = new BufferedReader(fr);
+        this.readLines(br);
+        fr.close();
+    }
+
+    private void readLines(BufferedReader reader) throws IOException {
         ArrayList<String> lines = new ArrayList<String>();
         String line;
-        if ((line = br.readLine()) != null) {
+        if ((line = reader.readLine()) != null) {
             lines.add(line);
         } else {
-            br.close();
+            reader.close();
         }
         this.lines = lines.toArray(new String[lines.size()]);
     }
 
-    public ArabReplace readNext() {
-        if (actLine < lines.length) {
-            return parseLine(lines[actLine++]);
+    /**
+     * This method to read the next correct line from the underlying file. It parses this line and instantiates a new
+     * {@link SNP} object.
+     * 
+     * @return the next {@link SNP}-object. NULL if no next object can be read.
+     */
+    public SNP readNext() {
+        if (curLine < lines.length) {
+            return parseLine(lines[curLine++]);
         }
         return null;
     }
 
-    public ArabReplace parseLine(String line) {
+    /**
+     * This method parses the given line and generates a new {@link SNP}-object.
+     * 
+     * @param line
+     *            the line to parse.
+     * @return the {@link SNP}-object presented by the given line.
+     */
+    private SNP parseLine(String line) {
         String[] Aline = line.split("\t");
-        String ecotype = Aline[0];
+        String ecotype = Aline[0]; // TODO: read ecotype_id from a mapping
         Aline[1] = Aline[1].replace("chr", "");
-        if (!Aline[1].equals("1") && !Aline[1].equals("2") && !Aline[1].equals("3") && !Aline[1].equals("4") && !Aline[1].equals("5")) {
+        if (!Aline[1].equals("1") && !Aline[1].equals("2") && !Aline[1].equals("3") && !Aline[1].equals("4")
+                && !Aline[1].equals("5")) {
             return null;
         }
         byte seqId = Byte.parseByte(Aline[1].replace("chr", ""));
@@ -68,16 +96,12 @@ public class FilteredVariantParser {
         byte from = (byte) Aline[3].charAt(0);
         byte to = (byte) Aline[4].charAt(0);
 
-        ArabReplace o = new ArabReplace();
+        SNP o = new SNP();
         o.setBasePosition(pos);
-        o.setEcotypeId((char) TYPE); //TODO:
+        o.setEcotypeId((char) ecotype_id);
         o.setSequenceId(seqId);
         o.setFrom(from);
         o.setTo(to);
-        //        System.out.println(o);
         return o;
     }
-
-    public static int TYPE = 1;
-   
 }
