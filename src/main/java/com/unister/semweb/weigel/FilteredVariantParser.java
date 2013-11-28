@@ -3,17 +3,23 @@ package com.unister.semweb.weigel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
  * @author Martin Nettling
  */
 public class FilteredVariantParser {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilteredVariantParser.class);
+
     String[] lines;
     int curLine;
     int ecotype_id;
@@ -33,33 +39,36 @@ public class FilteredVariantParser {
             readFileToLinesUnzipped(f);
         }
         this.ecotype_id = ecotype_id;
+        LOGGER.info("Read {} lines from {}", lines.length, filename);
     }
 
     private void readFileToLinesZipped(File f) throws IOException {
         FileInputStream fis = new FileInputStream(f);
         GZIPInputStream gis = new GZIPInputStream(fis);
-        BufferedReader br = new BufferedReader(new InputStreamReader(gis));
-        this.readLines(br);
-        br.close();
+        this.readStream(gis);
         gis.close();
         fis.close();
     }
 
     private void readFileToLinesUnzipped(File f) throws IOException {
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
+        FileInputStream fis = new FileInputStream(f);
+        this.readStream(fis);
+        fis.close();
+    }
+
+    private void readStream(InputStream is) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
         this.readLines(br);
-        fr.close();
+        br.close();
     }
 
     private void readLines(BufferedReader reader) throws IOException {
         ArrayList<String> lines = new ArrayList<String>();
         String line;
-        if ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             lines.add(line);
-        } else {
-            reader.close();
         }
+        reader.close();
         this.lines = lines.toArray(new String[lines.size()]);
     }
 

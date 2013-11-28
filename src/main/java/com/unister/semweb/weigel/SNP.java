@@ -32,12 +32,12 @@ public class SNP extends AbstractKVStorable {
     private static final long serialVersionUID = 3226841314268658893L;
 
     /** The lengths of the chromosomes in Arabidopsis thaliana */
-    public static final int[] ARAB_CHROMOSOME_LENGTHS = { 
-        34964571, 
-        22037565, 
-        25499034, 
-        20862711, 
-        31270811 };
+    public static final int[] ARAB_CHROMOSOME_LENGTHS = {
+            34964571,
+            22037565,
+            25499034,
+            20862711,
+            31270811 };
 
     /**
      * the size the object needs in byte, if we want to write it in a byte-array. If you make changes to the functions
@@ -70,6 +70,28 @@ public class SNP extends AbstractKVStorable {
      */
     public SNP() {
         this.key = new byte[KEY_SIZE];
+    }
+
+    /**
+     * Generates a new {@link SNP}-instance. Initializes empty {@link HERV#key}.
+     * 
+     * @param seqId
+     *            the id of the sequence
+     * @param position
+     *            the position on the sequence
+     * @param ecotype
+     *            the id of the ecotype
+     */
+    public SNP(byte seqId, int position, char ecotype) {
+        this.key = new byte[KEY_SIZE];
+        this.setSequenceId(seqId);
+        this.setBasePosition(position);
+        this.setEcotypeId(ecotype);
+    }
+
+    @Override
+    public int getSize() {
+        return ELEMENT_SIZE;
     }
 
     /**
@@ -234,20 +256,20 @@ public class SNP extends AbstractKVStorable {
         int basesPerBucket = (int) (fullLength / lowerBucketBound + 1);
         byte[] upperBound = new byte[7];
         byte[] lowerBound = new byte[7];
-        int bucketId = 0;       
+        int bucketId = 0;
         ArrayList<byte[]> maxKeyValues = new ArrayList<byte[]>();
         ArrayList<String> bucketNames = new ArrayList<String>();
 
         for (int i = 0; i < 5; i++) {
             ByteBuffer.wrap(lowerBound).put((byte) (i + 1)).putInt(0);
             ByteBuffer.wrap(upperBound).put((byte) (i + 1)).putInt(ARAB_CHROMOSOME_LENGTHS[i]);
-            int buckets = (int) Math.ceil( (double)ARAB_CHROMOSOME_LENGTHS[i] / basesPerBucket);
-            byte[][] rangesTmp = KeyUtils.getMaxValsPerRange(lowerBound, upperBound, buckets);            
-            
+            int buckets = (int) Math.ceil((double) ARAB_CHROMOSOME_LENGTHS[i] / basesPerBucket);
+            byte[][] rangesTmp = KeyUtils.getMaxValsPerRange(lowerBound, upperBound, buckets);
+
             for (int j = 0; j < buckets; j++) {
                 String bucketName = bucketId < 10 ? "data0" + bucketId + ".db" : "data" + bucketId + ".db";
                 rangesTmp[j][5] = rangesTmp[j][6] = (byte) 255;
-                maxKeyValues.add(Arrays.copyOf(rangesTmp[j],7));
+                maxKeyValues.add(Arrays.copyOf(rangesTmp[j], 7));
                 bucketNames.add(bucketName);
                 bucketId++;
             }
@@ -258,7 +280,6 @@ public class SNP extends AbstractKVStorable {
                 "SNP_RangeHashFunction.txt");
         return hashfunction;
     }
-    
 
     private static long sum(int[] summands) {
         long finalSum = 0;
