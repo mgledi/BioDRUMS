@@ -1,4 +1,4 @@
-package com.unister.semweb.drum.tutorial;
+package com.unister.semweb.biodrums.tutorial;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.unister.semweb.biodrums.weigel.SNP;
 import com.unister.semweb.drums.DRUMSParameterSet;
 import com.unister.semweb.drums.api.DRUMS;
 import com.unister.semweb.drums.api.DRUMS.AccessMode;
@@ -14,7 +15,6 @@ import com.unister.semweb.drums.api.DRUMSInstantiator;
 import com.unister.semweb.drums.api.DRUMSIterator;
 import com.unister.semweb.drums.api.DRUMSReader;
 import com.unister.semweb.drums.file.FileLockException;
-import com.unister.semweb.weigel.SNP;
 
 /**
  * This class provides a extensively documented example how to read {@link SNP}-records from a DRUMS-table. You should

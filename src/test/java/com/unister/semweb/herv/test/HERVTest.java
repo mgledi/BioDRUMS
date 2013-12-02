@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.unister.semweb.herv.HERV;
+import com.unister.semweb.biodrums.herv.HERV;
 
 /**
  * Tests the method of the {@link HERV}.

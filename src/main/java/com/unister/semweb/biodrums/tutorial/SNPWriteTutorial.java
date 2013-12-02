@@ -1,4 +1,4 @@
-package com.unister.semweb.drum.tutorial;
+package com.unister.semweb.biodrums.tutorial;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,14 +6,14 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
+import com.unister.semweb.biodrums.weigel.FilteredVariantParser;
+import com.unister.semweb.biodrums.weigel.SNP;
 import com.unister.semweb.drums.DRUMSParameterSet;
 import com.unister.semweb.drums.api.DRUMS;
 import com.unister.semweb.drums.api.DRUMSException;
 import com.unister.semweb.drums.api.DRUMSInstantiator;
 import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
 import com.unister.semweb.drums.storable.AbstractKVStorable;
-import com.unister.semweb.weigel.FilteredVariantParser;
-import com.unister.semweb.weigel.SNP;
 
 /**
  * This class provides a extensively documented example how to create a new DRUMS-table and how to write SNP-records

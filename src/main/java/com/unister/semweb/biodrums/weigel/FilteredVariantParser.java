@@ -1,4 +1,4 @@
-package com.unister.semweb.weigel;
+package com.unister.semweb.biodrums.weigel;
 
 import java.io.BufferedReader;
 import java.io.File;

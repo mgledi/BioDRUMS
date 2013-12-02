@@ -1,15 +1,15 @@
-package com.unister.semweb.weigel;
+package com.unister.semweb.biodrums.weigel;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.unister.semweb.biodrums.herv.HERV;
 import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
 import com.unister.semweb.drums.file.HeaderIndexFile;
 import com.unister.semweb.drums.storable.AbstractKVStorable;
 import com.unister.semweb.drums.util.Bytes;
 import com.unister.semweb.drums.util.KeyUtils;
-import com.unister.semweb.herv.HERV;
 
 /**
  * This class represents a SNP. It can be stored in {@link HeaderIndexFile}s. An object of this class needs 9 bytes
