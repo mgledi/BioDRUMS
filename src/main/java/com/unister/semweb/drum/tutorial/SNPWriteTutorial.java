@@ -6,7 +6,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 
-import com.unister.semweb.drums.GlobalParameters;
+import com.unister.semweb.drums.DRUMSParameterSet;
 import com.unister.semweb.drums.api.DRUMS;
 import com.unister.semweb.drums.api.DRUMSException;
 import com.unister.semweb.drums.api.DRUMSInstantiator;
@@ -42,9 +42,9 @@ public class SNPWriteTutorial {
          * from which all parameters are loaded. Further, the type of data must be defined. This is done by setting the
          * needed Generic to SNP.
          */
-        GlobalParameters<SNP> globalParameters = new GlobalParameters<SNP>("SNPExample/drums.properties", new SNP());
+        DRUMSParameterSet<SNP> globalParameters = new DRUMSParameterSet<SNP>("SNPExample/drums.properties", new SNP());
         /** to repeat the test we have to delete the table first */
-        FileUtils.deleteQuietly(new File(globalParameters.databaseDirectory));
+        FileUtils.deleteQuietly(new File(globalParameters.DATABASE_DIRECTORY));
 
         /**
          * {@link DRUMS} needs a consistent hash function. The {@link SNP} class provides a method to generate a
@@ -57,7 +57,7 @@ public class SNPWriteTutorial {
          * does not exists. It must be created before you can insert data.
          */
         DRUMS<SNP> drums = DRUMSInstantiator.createTable(hashFunction, globalParameters);
-
+        
         // obtain the concrete path to the example file
         URL url = SNPWriteTutorial.class.getClassLoader().getResource("SNPExample/SHA_filtered_variant.txt.gz");
         /**

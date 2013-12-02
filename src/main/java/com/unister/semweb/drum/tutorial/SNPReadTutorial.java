@@ -1,18 +1,18 @@
 package com.unister.semweb.drum.tutorial;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.unister.semweb.drums.GlobalParameters;
+import com.unister.semweb.drums.DRUMSParameterSet;
 import com.unister.semweb.drums.api.DRUMS;
 import com.unister.semweb.drums.api.DRUMS.AccessMode;
 import com.unister.semweb.drums.api.DRUMSException;
 import com.unister.semweb.drums.api.DRUMSInstantiator;
 import com.unister.semweb.drums.api.DRUMSIterator;
 import com.unister.semweb.drums.api.DRUMSReader;
-import com.unister.semweb.drums.bucket.hashfunction.RangeHashFunction;
 import com.unister.semweb.drums.file.FileLockException;
 import com.unister.semweb.weigel.SNP;
 
@@ -43,15 +43,12 @@ public class SNPReadTutorial {
          * from which all parameters are loaded. Further, the type of data must be defined. This is done by setting the
          * needed Generic to SNP.
          */
-        GlobalParameters<SNP> globalParameters = new GlobalParameters<SNP>("SNPExample/drums.properties", new SNP());
+        DRUMSParameterSet<SNP> globalParameters = new DRUMSParameterSet<SNP>(new File("/tmp/sdrumDatabase"));
 
         /**
-         * {@link DRUMS} needs a consistent hash function. The {@link SNP} class provides a method to generate a
-         * {@link RangeHashFunction} for Arabidopsis thaliana.
+         * Use the {@link DRUMSInstantiator}-class to open the DRUMS-table.
          */
-        RangeHashFunction hashFunction = SNP.createHashFunction();
-
-        DRUMS<SNP> drums = DRUMSInstantiator.openTable(hashFunction, AccessMode.READ_ONLY, globalParameters);
+        DRUMS<SNP> drums = DRUMSInstantiator.openTable(AccessMode.READ_ONLY, globalParameters);
 
         /**
          * ############################# Single Select Example
@@ -83,7 +80,7 @@ public class SNPReadTutorial {
         iterator.close();
 
         /**
-         * To perform range select you can use the iterator or the method {@link DRUMSReader#getRange(byte[],byte[]}.
+         * To perform range selects you can use the iterator or the method {@link DRUMSReader#getRange(byte[],byte[]}.
          * You can get a {@link DRUMSReader} by calling {@link DRUMS#getReader()}
          */
         System.out.println("\n\n############## Read Range on Chromosome 1 with DRUMSReader ##############");
@@ -93,19 +90,21 @@ public class SNPReadTutorial {
         List<SNP> range = reader.getRange(lowerKey.getKey(), upperKey.getKey());
         System.out.println("Found " + range.size() + " SNPs between " + lowerKey + " and " + upperKey);
         reader.closeFiles();
-        
+
         // filter data
-        System.out.println("\n\n############## Filter data in previous read range. Allow only mutations to 'A' ##############");
+        System.out
+                .println("\n\n############## Filter data in previous read range. Allow only mutations to 'A' ##############");
         Iterator<SNP> rangeIterator = range.iterator();
         ArrayList<SNP> filteredRange = new ArrayList<SNP>();
-        while(rangeIterator.hasNext()) {
+        while (rangeIterator.hasNext()) {
             SNP snp = rangeIterator.next();
-            if(snp.getTo() == (byte)'A') {
+            if (snp.getTo() == (byte) 'A') {
                 filteredRange.add(snp);
             }
         }
-        System.out.println("Found " + filteredRange.size() + " SNPs between " + lowerKey + " and " + upperKey + " , which mutated to 'A'");
-        
+        System.out.println("Found " + filteredRange.size() + " SNPs between " + lowerKey + " and " + upperKey
+                + " , which mutated to 'A'");
+
         drums.close();
     }
 }
