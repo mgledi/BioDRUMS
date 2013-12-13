@@ -94,6 +94,33 @@ public class HERV extends AbstractKVStorable {
     }
 
     /**
+     * Generates a new {@link HERV}-instance. This constructor fills {@link HERV#key} with the given values
+     * 
+     * @param chromosome
+     *            the chromosome number, the smallest chromosome has number 1
+     * @param startPositionChromosome
+     *            the start position of the mapping in the reference DNA
+     * @param endPositionChromosome
+     *            the end position of the mapping in the reference DNA
+     * @param startHERV
+     *            the start position of the mapping in the HERV
+     * @param endHERV
+     *            the end position of the mapping in the HERV
+     * @param idHERV
+     *            the id of the HERV
+     */
+    public HERV(
+            byte chromosome,
+            int startPositionChromosome,
+            int endPositionChromosome,
+            char startHERV,
+            char endHERV,
+            char idHERV) {
+        this();
+        this.setKey(chromosome, startPositionChromosome, endPositionChromosome, startHERV, endHERV, idHERV);
+    }
+
+    /**
      * Sets the key of this HERV data. The key consists of a chromosome, a start and end position at the chromosome, a
      * start end end position at HERV, an id of HERV, the strand on chromosome and an e-value.
      * 
@@ -187,13 +214,13 @@ public class HERV extends AbstractKVStorable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append((int) getChromosome()).append(" ");
+        sb.append("chr" + (int) getChromosome()).append(" ");
         sb.append((int) getStartPositionChromosome()).append(" ");
         sb.append((int) getEndPositionChromosome()).append(" ");
         sb.append((int) getStartHERV()).append(" ");
         sb.append((int) getEndHERV()).append(" ");
         sb.append((int) getIdHERV()).append(" ");
-        sb.append((int) getStrandOnChromosome()).append(" ");
+        sb.append((int) getStrandOnChromosome() == 0 ? "-":"+" ).append(" ");
         sb.append(getEValue()).append(" ");
         return sb.toString();
     }
@@ -278,13 +305,13 @@ public class HERV extends AbstractKVStorable {
             ByteBuffer.wrap(lowerBound).put((byte) (i + 1)).putInt(0); // put chromosome number
             ByteBuffer.wrap(upperBound).put((byte) (i + 1)).putInt(HUMAN_CHROMOSOME_LENGTHS[i]); // put length of
                                                                                                  // chromosome
-            int buckets = (int) Math.ceil( (double)HUMAN_CHROMOSOME_LENGTHS[i] / basesPerBucket);
+            int buckets = (int) Math.ceil((double) HUMAN_CHROMOSOME_LENGTHS[i] / basesPerBucket);
             byte[][] rangesTmp = KeyUtils.getMaxValsPerRange(lowerBound, upperBound, buckets);
 
             for (int j = 0; j < buckets; j++) {
                 String bucketName = bucketId < 10 ? "data0" + bucketId + ".db" : "data" + bucketId + ".db";
                 rangesTmp[j][5] = rangesTmp[j][6] = (byte) 255;
-                maxKeyValues.add(Arrays.copyOf(rangesTmp[j],7));
+                maxKeyValues.add(Arrays.copyOf(rangesTmp[j], 7));
                 bucketNames.add(bucketName);
                 bucketId++;
             }
