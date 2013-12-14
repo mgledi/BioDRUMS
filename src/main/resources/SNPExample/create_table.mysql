@@ -1,0 +1,11 @@
+CREATE TABLE `snp` (
+  `sequence_id` tinyint(4) NOT NULL DEFAULT '0',
+  `position` int(11) NOT NULL DEFAULT '0',
+  `ecotype_id` int(11) NOT NULL DEFAULT '0',
+  `fromBase` tinyint(4) DEFAULT NULL,
+  `toBase` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`sequence_id`,`position`,`ecotype
+  KEY `sequenceIdIndex` (`sequence_id`),
+  KEY `positionIndex` (`position`),
+  KEY `ecotypeIdIndex` (`ecotype_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1

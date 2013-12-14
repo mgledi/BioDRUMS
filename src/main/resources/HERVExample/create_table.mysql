@@ -1,0 +1,13 @@
+CREATE TABLE `herv` (
+  `chromosome` tinyint(2) NOT NULL DEFAULT '0',
+  `startPositionChromosome` int(4) NOT NULL DEFAULT '0',
+  `endPositionChromosome` int(4) NOT NULL DEFAULT '0',
+  `startPositionHERV` smallint(2) NOT NULL DEFAULT '0',
+  `endPositionHERV` smallint(2) NOT NULL DEFAULT '0',
+  `idHERV` smallint(2) NOT NULL DEFAULT '0',
+  `strand` tinyint(1) DEFAULT NULL,
+  `eValue` double DEFAULT NULL,
+  PRIMARY KEY (`chromosome`,`startPositionChromosome`,`endPositionChromosome`,`startPositionHERV`,`endPositionHERV`,`idHERV`),
+  KEY `startChromo` (`startPositionChromosome`),
+  KEY `endChromo` (`endPositionChromosome`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1

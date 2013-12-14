@@ -60,7 +60,7 @@ public class HERVWriteTutorial {
         DRUMS<HERV> drums = DRUMSInstantiator.createTable(hashFunction, globalParameters);
 
         // obtain the concrete path to the example file
-        URL url = HERVWriteTutorial.class.getClassLoader().getResource("HERVExample/HitMap.txt");
+        URL url = HERVWriteTutorial.class.getClassLoader().getResource("HERVExample/HitFile.txt");
         /**
          * To load all {@link HERV}s from a raw file, you can use the provided parser.
          */
